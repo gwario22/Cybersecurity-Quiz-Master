@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Quiz Master</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #4a5568;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #fff;
+        }
+
+        .nav-btn.active {
+            background: #4299e1;
+            color: white;
+        }
+
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .quiz-card {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4299e1;
+        }
+
+        .question {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            text-align: left;
+        }
+
+        .option:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option.selected {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .option.correct {
+            border-color: #48bb78;
+            background: #f0fff4;
+            color: #22543d;
+        }
+
+        .option.incorrect {
+            border-color: #f56565;
+            background: #fff5f5;
+            color: #742a2a;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            color: #22543d;
+        }
+
+        .feedback.incorrect {
+            background: #fff5f5;
+            border: 2px solid #f56565;
+            color: #742a2a;
+        }
+
+        .feedback h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .category-card {
+            padding: 20px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .category-card:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .category-card.selected {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .category-card h3 {
+            margin: 0 0 10px 0;
+            color: #2d3748;
+        }
+
+        .category-card p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4299e1;
+            transition: width 0.3s ease;
+        }
+
+        .results {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .results h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #4299e1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .recommendations {
+            text-align: left;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .recommendations ul {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                min-width: auto;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .category-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛡️ CyberSec Quiz Master</h1>
+            <p>Test your cybersecurity knowledge and improve your skills</p>
+        </header>
+
+        <nav class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('random-quiz')">Random Quiz</button>
+            <button class="nav-btn" onclick="showSection('assessment')">Assessment</button>
+        </nav>
+
+        <!-- Random Quiz Section -->
+        <section id="random-quiz" class="section active">
+            <div class="score-display">
+                Score: <span id="score">0</span> / <span id="total">0</span>
+            </div>
+            
+            <div class="category-selector" style="margin-bottom: 20px;">
+                <div class="category-card selected" onclick="selectQuizCategory('all')" id="cat-all">
+                    <h3>🎯 All Topics</h3>
+                    <p>Mixed questions from all categories</p>
+                </div>
+                <div class="category-card" onclick="selectQuizCategory('cybersecurity')" id="cat-cybersecurity">
+                    <h3>🔒 Cybersecurity</h3>
+                    <p>Security threats and defenses</p>
+                </div>
+                <div class="category-card" onclick="selectQuizCategory('networking')" id="cat-networking">
+                    <h3>🌐 Networking</h3>
+                    <p>Network protocols and concepts</p>
+                </div>
+                <div class="category-card" onclick="selectQuizCategory('hardware')" id="cat-hardware">
+                    <h3>💻 Hardware</h3>
+                    <p>Computer hardware components</p>
+                </div>
+                <div class="category-card" onclick="selectQuizCategory('software')" id="cat-software">
+                    <h3>⚙️ Software</h3>
+                    <p>Software security and development</p>
+                </div>
+                <div class="category-card" onclick="selectQuizCategory('linux')" id="cat-linux">
+                    <h3>🐧 Linux</h3>
+                    <p>Linux systems and commands</p>
+                </div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="question" id="question">
+                    Select a category above and click "New Question" to start!
+                </div>
+                
+                <div class="options" id="options">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+                
+                <div class="feedback" id="feedback">
+                    <!-- Feedback will be shown here -->
+                </div>
+                
+                <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Submit Answer</button>
+                <button class="btn" onclick="newQuestion()">New Question</button>
+            </div>
+        </section>
+
+        <!-- Assessment Section -->
+        <section id="assessment" class="section">
+            <div id="category-selection">
+                <h2>Choose Assessment Categories</h2>
+                <p>Select the areas you want to be assessed on (30 questions per category):</p>
+                
+                <div class="category-selector">
+                    <div class="category-card" onclick="toggleCategory('cybersecurity')">
+                        <h3>🔒 Cybersecurity</h3>
+                        <p>Threats, attacks, and defense strategies</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('networking')">
+                        <h3>🌐 Networking</h3>
+                        <p>Network protocols and security</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('hardware')">
+                        <h3>💻 Hardware</h3>
+                        <p>Physical security and hardware concepts</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('software')">
+                        <h3>⚙️ Software</h3>
+                        <p>Application security and software vulnerabilities</p>
+                    </div>
+                    <div class="category-card" onclick="toggleCategory('linux')">
+                        <h3>🐧 Linux</h3>
+                        <p>Linux systems and command line</p>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="startAssessment()">Start Assessment</button>
+            </div>
+            
+            <div id="assessment-quiz" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                
+                <div class="quiz-card">
+                    <div class="question" id="assessment-question">
+                        <!-- Assessment question will appear here -->
+                    </div>
+                    
+                    <div class="options" id="assessment-options">
+                        <!-- Assessment options will appear here -->
+                    </div>
+                    
+                    <button class="btn" id="assessment-submit" onclick="submitAssessmentAnswer()" disabled>Submit Answer</button>
+                </div>
+            </div>
+            
+            <div id="assessment-results" style="display: none;">
+                <!-- Results will be shown here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Expanded quiz data with 30+ questions per category
+        const quizData = {
+            cybersecurity: [
+                {
+                    question: "What is the most common type of cyber attack?",
+                    options: ["Phishing", "DDoS", "Malware", "SQL Injection"],
+                    correct: 0,
+                    explanation: "Phishing attacks are the most common, accounting for over 80% of reported security incidents. They trick users into revealing sensitive information through deceptive emails or websites."
+                },
+                {
+                    question: "What does 'zero-day' refer to in cybersecurity?",
+                    options: ["A vulnerability with no known fix", "The first day of a cyber attack", "A security patch release", "A type of encryption"],
+                    correct: 0,
+                    explanation: "A zero-day vulnerability is a security flaw that is unknown to security vendors and has no available patch, making it extremely dangerous as attackers can exploit it without detection."
+                },
+                {
+                    question: "Which authentication method is considered most secure?",
+                    options: ["Password only", "Two-factor authentication", "Biometric only", "Security questions"],
+                    correct: 1,
+                    explanation: "Two-factor authentication (2FA) combines something you know (password) with something you have (phone/token), making it much more secure than single-factor methods."
+                },
+                {
+                    question: "What is social engineering in cybersecurity?",
+                    options: ["Network configuration", "Manipulating people to reveal information", "Software development", "Hardware installation"],
+                    correct: 1,
+                    explanation: "Social engineering exploits human psychology rather than technical vulnerabilities, tricking people into breaking security procedures or revealing confidential information."
+                },
+                {
+                    question: "What does CIA stand for in cybersecurity?",
+                    options: ["Central Intelligence Agency", "Confidentiality, Integrity, Availability", "Computer Information Access", "Cyber Intelligence Analysis"],
+                    correct: 1,
+                    explanation: "CIA in cybersecurity refers to the three pillars of information security: Confidentiality (data privacy), Integrity (data accuracy), and Availability (data accessibility)."
+                },
+                {
+                    question: "What is a honeypot in cybersecurity?",
+                    options: ["A sweet security reward", "A decoy system to attract attackers", "A type of malware", "A password manager"],
+                    correct: 1,
+                    explanation: "A honeypot is a security mechanism that creates a decoy system to attract and detect unauthorized access attempts, helping security teams study attack patterns."
+                },
+                {
+                    question: "What is the purpose of penetration testing?",
+                    options: ["To break systems permanently", "To find vulnerabilities before attackers do", "To install malware", "To slow down networks"],
+                    correct: 1,
+                    explanation: "Penetration testing involves authorized simulated attacks on systems to identify vulnerabilities and security weaknesses before malicious attackers can exploit them."
+                },
+                {
+                    question: "What is ransomware?",
+                    options: ["Free security software", "Malware that encrypts files for money", "A type of firewall", "Network monitoring tool"],
+                    correct: 1,
+                    explanation: "Ransomware is malicious software that encrypts a victim's files and demands payment (ransom) for the decryption key, often causing significant business disruption."
+                },
+                {
+                    question: "What does SIEM stand for?",
+                    options: ["Security Information and Event Management", "System Integration and Error Monitoring", "Software Installation and Equipment Maintenance", "Secure Internet and Email Management"],
+                    correct: 0,
+                    explanation: "SIEM (Security Information and Event Management) systems collect, analyze, and correlate security data from multiple sources to detect and respond to threats."
+                },
+                {
+                    question: "What is a man-in-the-middle attack?",
+                    options: ["Physical theft of devices", "Intercepting communication between two parties", "Attacking server rooms", "Social media hacking"],
+                    correct: 1,
+                    explanation: "A man-in-the-middle attack occurs when an attacker secretly intercepts and potentially alters communications between two parties who believe they are communicating directly."
+                },
+                {
+                    question: "What is the principle of defense in depth?",
+                    options: ["Using only one strong security control", "Layering multiple security controls", "Hiding all security measures", "Using complex passwords only"],
+                    correct: 1,
+                    explanation: "Defense in depth involves implementing multiple layers of security controls so that if one layer fails, other layers continue to provide protection."
+                },
+                {
+                    question: "What is a botnet?",
+                    options: ["A network of robots", "A network of compromised computers", "A type of antivirus", "A secure communication protocol"],
+                    correct: 1,
+                    explanation: "A botnet is a network of compromised computers (bots) controlled remotely by cybercriminals to perform coordinated attacks like DDoS or spam distribution."
+                },
+                {
+                    question: "What does APT stand for in cybersecurity?",
+                    options: ["Advanced Persistent Threat", "Automated Protection Tool", "Application Performance Testing", "Active Prevention Technology"],
+                    correct: 0,
+                    explanation: "APT (Advanced Persistent Threat) refers to sophisticated, long-term cyberattacks where attackers gain unauthorized access and remain undetected for extended periods."
+                },
+                {
+                    question: "What is the purpose of encryption?",
+                    options: ["To speed up data transfer", "To protect data confidentiality", "To compress files", "To organize data"],
+                    correct: 1,
+                    explanation: "Encryption converts readable data into an unreadable format using algorithms and keys, ensuring data confidentiality and protecting it from unauthorized access."
+                },
+                {
+                    question: "What is a digital certificate?",
+                    options: ["An online diploma", "A cryptographic credential for identity verification", "A software license", "A network configuration file"],
+                    correct: 1,
+                    explanation: "A digital certificate is a cryptographic credential that binds a public key to an entity's identity, enabling secure communications and identity verification."
+                },
+                {
+                    question: "What is the difference between symmetric and asymmetric encryption?",
+                    options: ["No difference", "Symmetric uses one key, asymmetric uses two keys", "Symmetric is faster, asymmetric is slower", "Both B and C"],
+                    correct: 3,
+                    explanation: "Symmetric encryption uses one shared key for both encryption and decryption (faster), while asymmetric uses a key pair - public and private keys (more secure but slower)."
+                },
+                {
+                    question: "What is a security audit?",
+                    options: ["Installing new security software", "Systematic evaluation of security measures", "Deleting old files", "Updating passwords"],
+                    correct: 1,
+                    explanation: "A security audit is a systematic evaluation of an organization's security policies, procedures, and controls to identify vulnerabilities and ensure compliance."
+                },
+                {
+                    question: "What is the purpose of access control?",
+                    options: ["To slow down users", "To restrict unauthorized access to resources", "To monitor internet usage", "To backup data"],
+                    correct: 1,
+                    explanation: "Access control ensures that only authorized users can access specific resources, implementing the principle of least privilege to minimize security risks."
+                },
+                {
+                    question: "What is a security incident?",
+                    options: ["A planned security update", "An event that compromises security", "A security training session", "A new security policy"],
+                    correct: 1,
+                    explanation: "A security incident is any event that actually or potentially compromises the confidentiality, integrity, or availability of information systems or data."
+                },
+                {
+                    question: "What is the purpose of a security policy?",
+                    options: ["To slow down operations", "To provide guidelines for security practices", "To increase costs", "To complicate procedures"],
+                    correct: 1,
+                    explanation: "A security policy establishes guidelines, rules, and procedures for protecting an organization's information assets and ensuring consistent security practices."
+                },
+                {
+                    question: "What is threat modeling?",
+                    options: ["Creating 3D models of threats", "Systematic approach to identifying security threats", "Modeling network topology", "Creating user profiles"],
+                    correct: 1,
+                    explanation: "Threat modeling is a systematic approach to identifying, analyzing, and mitigating potential security threats to applications, systems, or networks."
+                },
+                {
+                    question: "What is a vulnerability assessment?",
+                    options: ["Installing security patches", "Systematic review of security weaknesses", "Creating backups", "Training employees"],
+                    correct: 1,
+                    explanation: "A vulnerability assessment is a systematic review of security weaknesses in information systems, networks, or applications to identify potential entry points for attackers."
+                },
+                {
+                    question: "What is the purpose of incident response?",
+                    options: ["To prevent all incidents", "To effectively handle security incidents when they occur", "To blame employees", "To shut down systems"],
+                    correct: 1,
+                    explanation: "Incident response is a structured approach to handling security incidents, minimizing damage, reducing recovery time, and preventing future occurrences."
+                },
+                {
+                    question: "What is a security baseline?",
+                    options: ["The minimum security requirements", "The maximum security possible", "A type of malware", "A network protocol"],
+                    correct: 0,
+                    explanation: "A security baseline defines the minimum security requirements and configurations that must be implemented to ensure adequate protection of information systems."
+                },
+                {
+                    question: "What is the purpose of security awareness training?",
+                    options: ["To scare employees", "To educate users about security threats and best practices", "To test technical skills", "To reduce productivity"],
+                    correct: 1,
+                    explanation: "Security awareness training educates employees about security threats, policies, and best practices, making them the first line of defense against cyberattacks."
+                },
+                {
+                    question: "What is a security control?",
+                    options: ["A remote control for security systems", "A safeguard implemented to reduce security risks", "A type of malware", "A network device"],
+                    correct: 1,
+                    explanation: "A security control is any safeguard or countermeasure implemented to avoid, detect, counteract, or minimize security risks to information systems and data."
+                },
+                {
+                    question: "What is risk assessment in cybersecurity?",
+                    options: ["Buying insurance", "Evaluating potential security risks and their impact", "Installing antivirus", "Creating backups"],
+                    correct: 1,
+                    explanation: "Risk assessment involves identifying, analyzing, and evaluating potential security risks to determine their likelihood and impact on organizational assets."
+                },
+                {
+                    question: "What is the purpose of security monitoring?",
+                    options: ["To spy on employees", "To continuously observe systems for security threats", "To slow down networks", "To increase costs"],
+                    correct: 1,
+                    explanation: "Security monitoring involves continuously observing systems, networks, and applications to detect, analyze, and respond to security threats in real-time."
+                },
+                {
+                    question: "What is a security framework?",
+                    options: ["A physical structure", "A structured approach to implementing security", "A type of software", "A network topology"],
+                    correct: 1,
+                    explanation: "A security framework provides a structured approach to implementing and managing cybersecurity, offering guidelines, standards, and best practices."
+                },
+                {
+                    question: "What is the principle of least privilege?",
+                    options: ["Give everyone full access", "Give users minimum necessary access", "Remove all access", "Give random access levels"],
+                    correct: 1,
+                    explanation: "The principle of least privilege means giving users only the minimum access rights needed to perform their job functions, reducing security risks and potential damage."
+                }
+            ],
+            networking: [
+                {
+                    question: "What port does HTTPS typically use?",
+                    options: ["80", "443", "22", "21"],
+                    correct: 1,
+                    explanation: "HTTPS uses port 443 by default. This encrypted version of HTTP ensures secure communication between web browsers and servers."
+                },
+                {
+                    question: "What does VPN stand for?",
+                    options: ["Virtual Private Network", "Very Private Network", "Verified Public Network", "Virtual Public Network"],
+                    correct: 0,
+                    explanation: "VPN (Virtual Private Network) creates a secure, encrypted connection over a public network, allowing safe remote access to private networks."
+                },
+                {
+                    question: "Which protocol is used for secure file transfer?",
+                    options: ["FTP", "HTTP", "SFTP", "SMTP"],
+                    correct: 2,
+                    explanation: "SFTP (SSH File Transfer Protocol) provides secure file transfer capabilities with encryption, unlike regular FTP which transmits data in plain text."
+                },
+                {
+                    question: "What is a firewall's primary function?",
+                    options: ["Speed up internet", "Block unauthorized access", "Store passwords", "Encrypt files"],
+                    correct: 1,
+                    explanation: "A firewall monitors and controls incoming and outgoing network traffic based on security rules, acting as a barrier between trusted and untrusted networks."
+                },
+                {
+                    question: "What does DNS stand for?",
+                    options: ["Domain Name System", "Data Network Security", "Digital Network Service", "Dynamic Name Server"],
+                    correct: 0,
+                    explanation: "DNS (Domain Name System) translates human-readable domain names into IP addresses, acting as the internet's phone book."
+                },
+                {
+                    question: "What is the purpose of NAT?",
+                    options: ["Network Address Translation", "Network Access Token", "Network Authentication Tool", "Network Analysis Technology"],
+                    correct: 0,
+                    explanation: "NAT (Network Address Translation) allows multiple devices on a private network to share a single public IP address when accessing the internet."
+                },
+                {
+                    question: "Which OSI layer does a router operate at?",
+                    options: ["Layer 1 (Physical)", "Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 4 (Transport)"],
+                    correct: 2,
+                    explanation: "Routers operate at Layer 3 (Network layer) of the OSI model, making routing decisions based on IP addresses."
+                },
+                {
+                    question: "What is the default subnet mask for a Class C network?",
+                    options: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"],
+                    correct: 2,
+                    explanation: "Class C networks use a default subnet mask of 255.255.255.0 (/24), providing 254 usable host addresses per network."
+                },
+                {
+                    question: "What protocol does ping use?",
+                    options: ["TCP", "UDP", "ICMP", "HTTP"],
+                    correct: 2,
+                    explanation: "Ping uses ICMP (Internet Control Message Protocol) to send echo request packets and receive echo reply packets to test network connectivity."
+                },
+                {
+                    question: "What is the purpose of DHCP?",
+                    options: ["Encrypt data", "Automatically assign IP addresses", "Route packets", "Resolve domain names"],
+                    correct: 1,
+                    explanation: "DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses and network configuration parameters to devices on a network."
+                },
+                {
+                    question: "Which port does SSH use by default?",
+                    options: ["21", "22", "23", "25"],
+                    correct: 1,
+                    explanation: "SSH (Secure Shell) uses port 22 by default, providing secure remote access and command execution over encrypted connections."
+                },
+                {
+                    question: "What is a VLAN?",
+                    options: ["Virtual Local Area Network", "Very Large Area Network", "Variable Length Area Network", "Verified Local Access Network"],
+                    correct: 0,
+                    explanation: "VLAN (Virtual Local Area Network) logically segments a physical network into multiple broadcast domains, improving security and network management."
+                },
+                {
+                    question: "What does ARP stand for?",
+                    options: ["Address Resolution Protocol", "Automatic Routing Protocol", "Advanced Routing Procedure", "Access Request Protocol"],
+                    correct: 0,
+                    explanation: "ARP (Address Resolution Protocol) maps IP addresses to MAC addresses, enabling communication between devices on the same network segment."
+                },
+                {
+                    question: "What is the difference between TCP and UDP?",
+                    options: ["No difference", "TCP is reliable, UDP is unreliable", "UDP is reliable, TCP is unreliable", "Both are equally reliable"],
+                    correct: 1,
+                    explanation: "TCP is connection-oriented and reliable with error checking and retransmission, while UDP is connectionless and faster but unreliable."
+                },
+                {
+                    question: "What is a MAC address?",
+                    options: ["A computer brand", "Media Access Control address", "Maximum Access Code", "Machine Authentication Certificate"],
+                    correct: 1,
+                    explanation: "MAC (Media Access Control) address is a unique identifier assigned to network interfaces, operating at the data link layer."
+                },
+                {
+                    question: "What is the purpose of a proxy server?",
+                    options: ["Store files", "Act as intermediary for client requests", "Encrypt data", "Assign IP addresses"],
+                    correct: 1,
+                    explanation: "A proxy server acts as an intermediary between clients and servers, providing functions like caching, filtering, and anonymity."
+                },
+                {
+                    question: "What does SNMP stand for?",
+                    options: ["Simple Network Management Protocol", "Secure Network Monitoring Procedure", "System Network Management Platform", "Standard Network Messaging Protocol"],
+                    correct: 0,
+                    explanation: "SNMP (Simple Network Management Protocol) is used for monitoring and managing network devices like routers, switches, and servers."
+                },
+                {
+                    question: "What is a DMZ in networking?",
+                    options: ["Demilitarized Zone", "Data Management Zone", "Dynamic Memory Zone", "Digital Media Zone"],
+                    correct: 0,
+                    explanation: "DMZ (Demilitarized Zone) is a network segment that sits between internal and external networks, hosting public-facing services with controlled access."
+                },
+                {
+                    question: "What is the purpose of QoS?",
+                    options: ["Quality of Service", "Quick Operating System", "Quantum Operating Standard", "Query Optimization Service"],
+                    correct: 0,
+                    explanation: "QoS (Quality of Service) manages network traffic to ensure adequate performance for critical applications by prioritizing certain types of data."
+                },
+                {
+                    question: "What is a network topology?",
+                    options: ["Network speed", "Physical or logical arrangement of network elements", "Network security policy", "Network protocol"],
+                    correct: 1,
+                    explanation: "Network topology describes the physical or logical arrangement of network devices and connections, such as star, ring, or mesh configurations."
+                },
+                {
+                    question: "What does BGP stand for?",
+                    options: ["Border Gateway Protocol", "Basic Gateway Procedure", "Broadcast Group Protocol", "Binary Gateway Platform"],
+                    correct: 0,
+                    explanation: "BGP (Border Gateway Protocol) is the routing protocol used to exchange routing information between different autonomous systems on the internet."
+                },
+                {
+                    question: "What is the purpose of OSPF?",
+                    options: ["Open Shortest Path First", "Operating System Protocol Framework", "Optimal Security Policy Framework", "Online Service Provider Forum"],
+                    correct: 0,
+                    explanation: "OSPF (Open Shortest Path First) is a link-state routing protocol that finds the shortest path between network destinations within an autonomous system."
+                },
+                {
+                    question: "What is a network switch?",
+                    options: ["A power switch", "A device that connects devices in a network", "A network cable", "A wireless router"],
+                    correct: 1,
+                    explanation: "A network switch is a device that connects multiple devices in a network, forwarding data between them based on MAC addresses."
+                },
+                {
+                    question: "What does MPLS stand for?",
+                    options: ["Multi-Protocol Label Switching", "Maximum Packet Length Standard", "Managed Private Line Service", "Multiple Path Load Sharing"],
+                    correct: 0,
+                    explanation: "MPLS (Multi-Protocol Label Switching) is a routing technique that uses labels to make data forwarding decisions, improving network performance."
+                },
+                {
+                    question: "What is the purpose of spanning tree protocol?",
+                    options: ["Prevent network loops", "Increase network speed", "Encrypt data", "Assign IP addresses"],
+                    correct: 0,
+                    explanation: "Spanning Tree Protocol (STP) prevents network loops in switched networks by blocking redundant paths while maintaining network connectivity."
+                },
+                {
+                    question: "What is a network gateway?",
+                    options: ["A network cable", "A device that connects different networks", "A type of switch", "A wireless access point"],
+                    correct: 1,
+                    explanation: "A network gateway is a device that connects two different networks, often with different protocols, acting as a translator between them."
+                },
+                {
+                    question: "What does EIGRP stand for?",
+                    options: ["Enhanced Interior Gateway Routing Protocol", "Efficient Internet Gateway Routing Procedure", "Extended Internal Group Routing Platform", "Encrypted Internet Gateway Routing Protocol"],
+                    correct: 0,
+                    explanation: "EIGRP (Enhanced Interior Gateway Routing Protocol) is Cisco's proprietary routing protocol that combines features of distance-vector and link-state protocols."
+                },
+                {
+                    question: "What is the purpose of HSRP?",
+                    options: ["Hot Standby Router Protocol", "High Speed Routing Protocol", "Hardware Security Routing Procedure", "Host Service Registration Protocol"],
+                    correct: 0,
+                    explanation: "HSRP (Hot Standby Router Protocol) provides gateway redundancy by allowing multiple routers to work together to present a single virtual router."
+                },
+                {
+                    question: "What is a WLAN?",
+                    options: ["Wide Local Area Network", "Wireless Local Area Network", "World Local Area Network", "Web Local Area Network"],
+                    correct: 1,
+                    explanation: "WLAN (Wireless Local Area Network) is a local area network that uses wireless communication instead of wired connections to connect devices."
+                },
+                {
+                    question: "What does WPA stand for in wireless security?",
+                    options: ["Wi-Fi Protected Access", "Wireless Protocol Authentication", "Web Protection Algorithm", "Wireless Password Access"],
+                    correct: 0,
+                    explanation: "WPA (Wi-Fi Protected Access) is a security protocol designed to secure wireless networks, replacing the less secure WEP protocol."
+                }
+            ],
+            hardware: [
+                {
+                    question: "What is a TPM chip used for?",
+                    options: ["Graphics processing", "Secure cryptographic operations", "Network connectivity", "Audio processing"],
+                    correct: 1,
+                    explanation: "TPM (Trusted Platform Module) is a hardware security chip that provides secure storage for cryptographic keys and performs secure boot processes."
+                },
+                {
+                    question: "Which is a physical security measure?",
+                    options: ["Antivirus software", "Cable locks", "Firewalls", "Encryption"],
+                    correct: 1,
+                    explanation: "Cable locks are physical security devices that prevent theft of laptops and other portable equipment by securing them to fixed objects."
+                },
+                {
+                    question: "What does BIOS stand for?",
+                    options: ["Basic Input Output System", "Binary Input Output System", "Basic Internet Operating System", "Binary Internet Operating System"],
+                    correct: 0,
+                    explanation: "BIOS (Basic Input/Output System) is firmware that initializes hardware during boot and provides runtime services for operating systems and programs."
+                },
+                {
+                    question: "What is the purpose of a hardware security module (HSM)?",
+                    options: ["Increase processing speed", "Manage and protect cryptographic keys", "Improve graphics", "Enhance audio quality"],
+                    correct: 1,
+                    explanation: "HSMs are dedicated hardware devices designed to securely generate, store, and manage cryptographic keys and perform cryptographic operations."
+                },
+                {
+                    question: "What is UEFI?",
+                    options: ["Unified Extensible Firmware Interface", "Universal Electronic Firmware Integration", "Unified Electronic File Interface", "Universal Extensible File Integration"],
+                    correct: 0,
+                    explanation: "UEFI (Unified Extensible Firmware Interface) is a modern replacement for BIOS, providing better security features and faster boot times."
+                },
+                {
+                    question: "What is the purpose of ECC memory?",
+                    options: ["Faster processing", "Error detection and correction", "Better graphics", "Lower power consumption"],
+                    correct: 1,
+                    explanation: "ECC (Error-Correcting Code) memory can detect and correct single-bit errors, improving system reliability and data integrity."
+                },
+                {
+                    question: "What is a KVM switch?",
+                    options: ["Keyboard, Video, Mouse switch", "Key Verification Module", "Kernel Virtual Machine", "Key Value Memory"],
+                    correct: 0,
+                    explanation: "A KVM switch allows multiple computers to be controlled using a single keyboard, video monitor, and mouse, useful for server management."
+                },
+                {
+                    question: "What is the purpose of a UPS?",
+                    options: ["Uninterruptible Power Supply", "Universal Processing System", "User Protection Service", "Unified Power Standard"],
+                    correct: 0,
+                    explanation: "UPS (Uninterruptible Power Supply) provides backup power during electrical outages and protects equipment from power surges and fluctuations."
+                },
+                {
+                    question: "What is RAID?",
+                    options: ["Random Access Information Database", "Redundant Array of Independent Disks", "Rapid Application Integration Development", "Remote Access Information Directory"],
+                    correct: 1,
+                    explanation: "RAID (Redundant Array of Independent Disks) combines multiple disk drives to improve performance, reliability, or both through data redundancy."
+                },
+                {
+                    question: "What is the difference between SATA and NVMe?",
+                    options: ["No difference", "SATA is older and slower, NVMe is newer and faster", "NVMe is older, SATA is newer", "Both are equally fast"],
+                    correct: 1,
+                    explanation: "SATA is an older interface for storage devices, while NVMe (Non-Volatile Memory Express) is a newer, much faster interface designed for SSDs."
+                },
+                {
+                    question: "What is secure boot?",
+                    options: ["Fast startup process", "Verification of boot software integrity", "Encrypted hard drive", "Password-protected startup"],
+                    correct: 1,
+                    explanation: "Secure boot is a security feature that ensures only trusted software is loaded during the boot process, preventing malware from loading early."
+                },
+                {
+                    question: "What is the purpose of thermal management in computers?",
+                    options: ["Increase speed", "Prevent overheating and maintain performance", "Save power", "Reduce noise"],
+                    correct: 1,
+                    explanation: "Thermal management prevents components from overheating, which can cause performance throttling, instability, or permanent damage to hardware."
+                },
+                {
+                    question: "What is a hardware firewall?",
+                    options: ["Software installed on computer", "Physical device that filters network traffic", "Antivirus program", "Operating system feature"],
+                    correct: 1,
+                    explanation: "A hardware firewall is a physical device that filters network traffic between networks, providing network-level security independent of individual computers."
+                },
+                {
+                    question: "What is the purpose of a chassis intrusion sensor?",
+                    options: ["Monitor temperature", "Detect unauthorized physical access", "Measure power consumption", "Control fan speed"],
+                    correct: 1,
+                    explanation: "Chassis intrusion sensors detect when a computer case has been opened, alerting administrators to potential unauthorized physical access."
+                },
+                {
+                    question: "What is Intel TXT?",
+                    options: ["Text processing technology", "Trusted Execution Technology", "Turbo eXtended Technology", "Thermal eXchange Technology"],
+                    correct: 1,
+                    explanation: "Intel TXT (Trusted Execution Technology) provides hardware-based security features to create a trusted computing environment and protect against software attacks."
+                },
+                {
+                    question: "What is the purpose of a smart card reader?",
+                    options: ["Read memory cards", "Authenticate users with smart cards", "Process credit cards", "Read RFID tags"],
+                    correct: 1,
+                    explanation: "Smart card readers authenticate users by reading cryptographic credentials stored on smart cards, providing strong two-factor authentication."
+                },
+                {
+                    question: "What is ARM TrustZone?",
+                    options: ["Network security zone", "Hardware security architecture", "Software firewall", "Encryption algorithm"],
+                    correct: 1,
+                    explanation: "ARM TrustZone is a hardware security architecture that creates secure and non-secure worlds on ARM processors, isolating sensitive operations."
+                },
+                {
+                    question: "What is the purpose of hardware-based encryption?",
+                    options: ["Faster processing", "Offload encryption from CPU and improve security", "Better graphics", "Lower power usage"],
+                    correct: 1,
+                    explanation: "Hardware-based encryption uses dedicated chips to perform encryption, reducing CPU load and providing better security through hardware isolation."
+                },
+                {
+                    question: "What is a hardware token?",
+                    options: ["Physical device for authentication", "Software license", "Network access card", "Memory module"],
+                    correct: 0,
+                    explanation: "A hardware token is a physical device that generates or stores authentication credentials, providing strong two-factor authentication."
+                },
+                {
+                    question: "What is the purpose of Intel AMT?",
+                    options: ["Active Management Technology", "Advanced Memory Technology", "Automated Monitoring Tool", "Application Management Technology"],
+                    correct: 0,
+                    explanation: "Intel AMT (Active Management Technology) allows remote management of computers even when they're powered off or the OS is unresponsive."
+                },
+                {
+                    question: "What is a cold boot attack?",
+                    options: ["Attack during system startup", "Physical attack to recover data from RAM", "Network attack on cold systems", "Attack on hibernating systems"],
+                    correct: 1,
+                    explanation: "A cold boot attack involves physically accessing RAM chips to recover encryption keys or sensitive data that persists briefly after power loss."
+                },
+                {
+                    question: "What is the purpose of hardware write protection?",
+                    options: ["Prevent unauthorized modifications", "Increase write speed", "Reduce power consumption", "Improve data compression"],
+                    correct: 0,
+                    explanation: "Hardware write protection prevents unauthorized modifications to firmware or critical system areas, protecting against malware and tampering."
+                },
+                {
+                    question: "What is a hardware keylogger?",
+                    options: ["Software that logs keys", "Physical device that captures keystrokes", "Keyboard with logging feature", "Key management system"],
+                    correct: 1,
+                    explanation: "A hardware keylogger is a physical device that captures and stores keystrokes, often used maliciously to steal passwords and sensitive information."
+                },
+                {
+                    question: "What is the purpose of tamper-evident seals?",
+                    options: ["Improve appearance", "Detect unauthorized physical access", "Reduce static electricity", "Improve cooling"],
+                    correct: 1,
+                    explanation: "Tamper-evident seals show visible signs when removed or disturbed, helping detect unauthorized physical access to sensitive equipment."
+                },
+                {
+                    question: "What is a Faraday cage?",
+                    options: ["Animal enclosure", "Electromagnetic shielding enclosure", "Network security device", "Cooling system"],
+                    correct: 1,
+                    explanation: "A Faraday cage is an enclosure that blocks electromagnetic fields, protecting sensitive equipment from electromagnetic interference and eavesdropping."
+                },
+                {
+                    question: "What is the purpose of hardware random number generators?",
+                    options: ["Generate predictable numbers", "Generate truly random numbers for cryptography", "Improve processing speed", "Reduce power consumption"],
+                    correct: 1,
+                    explanation: "Hardware random number generators use physical processes to generate truly random numbers, essential for strong cryptographic keys and security."
+                },
+                {
+                    question: "What is a hardware backdoor?",
+                    options: ["Physical rear entrance", "Unauthorized access mechanism in hardware", "Backup power supply", "Secondary cooling system"],
+                    correct: 1,
+                    explanation: "A hardware backdoor is an unauthorized access mechanism built into hardware components, potentially allowing attackers to bypass security measures."
+                },
+                {
+                    question: "What is the purpose of secure elements in mobile devices?",
+                    options: ["Improve battery life", "Provide tamper-resistant security functions", "Enhance display quality", "Increase processing speed"],
+                    correct: 1,
+                    explanation: "Secure elements are tamper-resistant hardware components that securely store sensitive data and perform cryptographic operations in mobile devices."
+                },
+                {
+                    question: "What is hardware attestation?",
+                    options: ["Hardware warranty", "Cryptographic proof of hardware integrity", "Hardware performance testing", "Hardware compatibility check"],
+                    correct: 1,
+                    explanation: "Hardware attestation provides cryptographic proof that hardware components are genuine and haven't been tampered with, ensuring system integrity."
+                },
+                {
+                    question: "What is the purpose of hardware-based isolation?",
+                    options: ["Separate different processes securely", "Improve performance", "Reduce power consumption", "Enhance graphics"],
+                    correct: 0,
+                    explanation: "Hardware-based isolation uses hardware features to securely separate different processes or security domains, preventing unauthorized access between them."
+                }
+            ],
+            software: [
+                {
+                    question: "What is SQL injection?",
+                    options: ["A type of database", "A malicious code attack on databases", "A programming language", "A network protocol"],
+                    correct: 1,
+                    explanation: "SQL injection is an attack where malicious SQL code is inserted into application queries, potentially allowing attackers to view, modify, or delete database data."
+                },
+                {
+                    question: "What does patch management involve?",
+                    options: ["Creating new software", "Updating software to fix vulnerabilities", "Deleting old files", "Installing hardware"],
+                    correct: 1,
+                    explanation: "Patch management is the process of identifying, testing, and installing software updates to fix security vulnerabilities and bugs in applications and operating systems."
+                },
+                {
+                    question: "What is buffer overflow?",
+                    options: ["Too much data in memory", "A type of virus", "Network congestion", "Hard drive failure"],
+                    correct: 0,
+                    explanation: "Buffer overflow occurs when a program writes more data to a buffer than it can hold, potentially allowing attackers to execute malicious code or crash the system."
+                },
+                {
+                    question: "What is the principle of least privilege?",
+                    options: ["Give users maximum access", "Give users minimum necessary access", "Remove all user access", "Give random access levels"],
+                    correct: 1,
+                    explanation: "The principle of least privilege means giving users only the minimum access rights needed to perform their job functions, reducing security risks."
+                },
+                {
+                    question: "What is cross-site scripting (XSS)?",
+                    options: ["A programming language", "Injecting malicious scripts into web pages", "A network protocol", "A database query"],
+                    correct: 1,
+                    explanation: "XSS is a vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users, potentially stealing data or hijacking sessions."
+                },
+                {
+                    question: "What is code signing?",
+                    options: ["Writing code comments", "Digitally signing software to verify authenticity", "Code documentation", "Code compilation"],
+                    correct: 1,
+                    explanation: "Code signing uses digital signatures to verify the authenticity and integrity of software, ensuring it hasn't been tampered with since signing."
+                },
+                {
+                    question: "What is a race condition?",
+                    options: ["Fast code execution", "Multiple processes accessing shared resources simultaneously", "Code optimization", "Network latency"],
+                    correct: 1,
+                    explanation: "A race condition occurs when multiple processes access shared resources simultaneously, potentially leading to unpredictable behavior or security vulnerabilities."
+                },
+                {
+                    question: "What is input validation?",
+                    options: ["Checking user input for malicious content", "Validating software licenses", "Testing input devices", "Checking network input"],
+                    correct: 0,
+                    explanation: "Input validation involves checking and sanitizing user input to prevent malicious data from causing security vulnerabilities like injection attacks."
+                },
+                {
+                    question: "What is a software vulnerability?",
+                    options: ["A software feature", "A weakness that can be exploited", "A software license", "A programming language"],
+                    correct: 1,
+                    explanation: "A software vulnerability is a weakness or flaw in software that can be exploited by attackers to gain unauthorized access or cause harm."
+                },
+                {
+                    question: "What is secure coding?",
+                    options: ["Fast programming", "Writing code with security considerations", "Code encryption", "Code compression"],
+                    correct: 1,
+                    explanation: "Secure coding involves writing software with security considerations from the beginning, following best practices to prevent vulnerabilities."
+                },
+                {
+                    question: "What is a software backdoor?",
+                    options: ["Software exit function", "Hidden access mechanism in software", "Software backup", "Software documentation"],
+                    correct: 1,
+                    explanation: "A software backdoor is a hidden access mechanism that bypasses normal authentication, potentially allowing unauthorized access to systems."
+                },
+                {
+                    question: "What is application sandboxing?",
+                    options: ["Running apps in isolated environments", "App development environment", "App testing procedure", "App deployment method"],
+                    correct: 0,
+                    explanation: "Application sandboxing runs applications in isolated environments with limited access to system resources, containing potential security threats."
+                },
+                {
+                    question: "What is the purpose of software composition analysis?",
+                    options: ["Analyze code performance", "Identify vulnerabilities in third-party components", "Optimize code size", "Test user interfaces"],
+                    correct: 1,
+                    explanation: "Software composition analysis identifies and tracks third-party components in applications, helping detect known vulnerabilities and license issues."
+                },
+                {
+                    question: "What is a zero-day exploit?",
+                    options: ["First day of software release", "Exploit for unknown vulnerabilities", "Free software exploit", "Daily security update"],
+                    correct: 1,
+                    explanation: "A zero-day exploit takes advantage of previously unknown vulnerabilities before security patches are available, making them particularly dangerous."
+                },
+                {
+                    question: "What is static application security testing (SAST)?",
+                    options: ["Testing app performance", "Analyzing source code for vulnerabilities", "Testing user interfaces", "Testing network connectivity"],
+                    correct: 1,
+                    explanation: "SAST analyzes application source code, bytecode, or binaries to identify security vulnerabilities without executing the program."
+                },
+                {
+                    question: "What is dynamic application security testing (DAST)?",
+                    options: ["Testing source code", "Testing running applications for vulnerabilities", "Testing databases", "Testing networks"],
+                    correct: 1,
+                    explanation: "DAST tests running applications by simulating attacks and analyzing responses to identify security vulnerabilities in real-time."
+                },
+                {
+                    question: "What is a software bill of materials (SBOM)?",
+                    options: ["Software pricing list", "Inventory of software components", "Software installation guide", "Software license agreement"],
+                    correct: 1,
+                    explanation: "An SBOM is a detailed inventory of all software components, libraries, and dependencies used in an application, helping track security risks."
+                },
+                {
+                    question: "What is the purpose of code obfuscation?",
+                    options: ["Make code run faster", "Make code harder to understand and reverse engineer", "Compress code size", "Improve code readability"],
+                    correct: 1,
+                    explanation: "Code obfuscation transforms code to make it difficult to understand and reverse engineer while maintaining functionality, protecting intellectual property."
+                },
+                {
+                    question: "What is a software supply chain attack?",
+                    options: ["Attack on software delivery", "Compromising software through third-party components", "Attack on software stores", "Attack on software developers"],
+                    correct: 1,
+                    explanation: "Software supply chain attacks compromise software by targeting third-party components, libraries, or development tools used in the software creation process."
+                },
+                {
+                    question: "What is the purpose of application whitelisting?",
+                    options: ["Allow only approved applications to run", "List all installed applications", "Optimize application performance", "Update applications automatically"],
+                    correct: 0,
+                    explanation: "Application whitelisting allows only pre-approved applications to execute, preventing unauthorized or malicious software from running."
+                },
+                {
+                    question: "What is a memory leak?",
+                    options: ["Physical memory damage", "Program failing to release allocated memory", "Memory encryption failure", "Memory access violation"],
+                    correct: 1,
+                    explanation: "A memory leak occurs when a program allocates memory but fails to release it, gradually consuming available memory and potentially causing system instability."
+                },
+                {
+                    question: "What is the purpose of software escrow?",
+                    options: ["Software payment processing", "Protecting source code access", "Software distribution", "Software licensing"],
+                    correct: 1,
+                    explanation: "Software escrow involves depositing source code with a third party to ensure access if the software vendor becomes unable to support the product."
+                },
+                {
+                    question: "What is a logic bomb?",
+                    options: ["Explosive device", "Malicious code triggered by specific conditions", "Logic error in code", "Debugging tool"],
+                    correct: 1,
+                    explanation: "A logic bomb is malicious code that remains dormant until triggered by specific conditions, then executes its harmful payload."
+                },
+                {
+                    question: "What is the purpose of software integrity checking?",
+                    options: ["Check software performance", "Verify software hasn't been tampered with", "Check software compatibility", "Check software licenses"],
+                    correct: 1,
+                    explanation: "Software integrity checking uses checksums, hashes, or digital signatures to verify that software hasn't been modified or corrupted."
+                },
+                {
+                    question: "What is a privilege escalation attack?",
+                    options: ["Gaining higher access levels than authorized", "Reducing user privileges", "Escalating support tickets", "Increasing system performance"],
+                    correct: 0,
+                    explanation: "Privilege escalation attacks exploit vulnerabilities to gain higher access levels than originally authorized, potentially compromising entire systems."
+                },
+                {
+                    question: "What is the purpose of application performance monitoring (APM)?",
+                    options: ["Monitor app security only", "Monitor app performance and detect issues", "Monitor app licenses", "Monitor app updates"],
+                    correct: 1,
+                    explanation: "APM monitors application performance, availability, and user experience to detect issues, optimize performance, and ensure reliability."
+                },
+                {
+                    question: "What is a software license compliance audit?",
+                    options: ["Performance testing", "Verifying proper software licensing", "Security vulnerability assessment", "Code quality review"],
+                    correct: 1,
+                    explanation: "Software license compliance audits verify that organizations are using software according to their license agreements, avoiding legal and financial risks."
+                },
+                {
+                    question: "What is the purpose of software configuration management?",
+                    options: ["Manage software settings and versions", "Install software", "Test software", "Document software"],
+                    correct: 0,
+                    explanation: "Software configuration management controls and tracks changes to software, ensuring consistency and enabling rollback to previous versions when needed."
+                },
+                {
+                    question: "What is a software artifact?",
+                    options: ["Software bug", "Byproduct of software development process", "Software license", "Software documentation"],
+                    correct: 1,
+                    explanation: "Software artifacts are byproducts of the software development process, including source code, documentation, test cases, and compiled binaries."
+                },
+                {
+                    question: "What is the purpose of software retirement?",
+                    options: ["Improve software performance", "Safely decommission software and protect data", "Update software", "Install new software"],
+                    correct: 1,
+                    explanation: "Software retirement involves safely decommissioning software systems, ensuring data protection, security, and proper transition to replacement systems."
+                }
+            ],
+            linux: [
+                {
+                    question: "What command is used to list files in Linux?",
+                    options: ["dir", "ls", "list", "show"],
+                    correct: 1,
+                    explanation: "The 'ls' command lists files and directories in Linux. It's one of the most commonly used commands for navigating the file system."
+                },
+                {
+                    question: "What does the 'sudo' command do?",
+                    options: ["Switch user", "Execute commands as another user", "Show user details", "Set user password"],
+                    correct: 1,
+                    explanation: "The 'sudo' command allows users to execute commands as another user, typically root, providing temporary elevated privileges."
+                },
+                {
+                    question: "Which file contains user account information in Linux?",
+                    options: ["/etc/passwd", "/etc/users", "/etc/accounts", "/etc/login"],
+                    correct: 0,
+                    explanation: "/etc/passwd contains user account information including usernames, user IDs, home directories, and default shells."
+                },
+                {
+                    question: "What command is used to change file permissions?",
+                    options: ["perm", "chmod", "chown", "access"],
+                    correct: 1,
+                    explanation: "The 'chmod' command changes file permissions in Linux, controlling read, write, and execute access for owner, group, and others."
+                },
+                {
+                    question: "What does the 'ps' command show?",
+                    options: ["Print screen", "Running processes", "Print settings", "Process statistics"],
+                    correct: 1,
+                    explanation: "The 'ps' command displays information about running processes, including process IDs, CPU usage, and command names."
+                },
+                {
+                    question: "Which directory contains system configuration files?",
+                    options: ["/home", "/etc", "/var", "/usr"],
+                    correct: 1,
+                    explanation: "The /etc directory contains system configuration files and scripts used by the operating system and applications."
+                },
+                {
+                    question: "What command is used to search for text within files?",
+                    options: ["find", "search", "grep", "locate"],
+                    correct: 2,
+                    explanation: "The 'grep' command searches for specific text patterns within files, making it essential for log analysis and text processing."
+                },
+                {
+                    question: "What does the 'top' command display?",
+                    options: ["Top files", "System resource usage", "Top directories", "Top users"],
+                    correct: 1,
+                    explanation: "The 'top' command displays real-time system resource usage, including CPU, memory, and running processes."
+                },
+                {
+                    question: "Which command is used to copy files?",
+                    options: ["copy", "cp", "duplicate", "clone"],
+                    correct: 1,
+                    explanation: "The 'cp' command copies files and directories in Linux, preserving or modifying attributes as specified."
+                },
+                {
+                    question: "What is the root directory in Linux?",
+                    options: ["/root", "/", "/home", "/admin"],
+                    correct: 1,
+                    explanation: "The root directory '/' is the top-level directory in the Linux file system hierarchy, containing all other directories."
+                },
+                {
+                    question: "What command shows the current working directory?",
+                    options: ["cwd", "pwd", "dir", "where"],
+                    correct: 1,
+                    explanation: "The 'pwd' (print working directory) command displays the full path of the current directory you're in."
+                },
+                {
+                    question: "Which file contains password hashes in modern Linux systems?",
+                    options: ["/etc/passwd", "/etc/shadow", "/etc/passwords", "/etc/hash"],
+                    correct: 1,
+                    explanation: "/etc/shadow contains encrypted password hashes and password aging information, accessible only by root for security."
+                },
+                {
+                    question: "What command is used to monitor system logs?",
+                    options: ["log", "tail", "monitor", "watch"],
+                    correct: 1,
+                    explanation: "The 'tail' command, especially 'tail -f', is commonly used to monitor log files in real-time by showing the last lines of files."
+                },
+                {
+                    question: "What does the 'crontab' command manage?",
+                    options: ["System tables", "Scheduled tasks", "Configuration tabs", "Process tables"],
+                    correct: 1,
+                    explanation: "The 'crontab' command manages scheduled tasks (cron jobs) that run automatically at specified times or intervals."
+                },
+                {
+                    question: "Which command is used to change file ownership?",
+                    options: ["chmod", "chown", "owner", "setowner"],
+                    correct: 1,
+                    explanation: "The 'chown' command changes file and directory ownership, specifying the new owner and optionally the group."
+                },
+                {
+                    question: "What is the purpose of the /var directory?",
+                    options: ["Variable data", "Various programs", "Virtual files", "Vendor software"],
+                    correct: 0,
+                    explanation: "The /var directory contains variable data files that change during system operation, including logs, databases, and temporary files."
+                },
+                {
+                    question: "What command is used to compress files?",
+                    options: ["compress", "zip", "tar", "pack"],
+                    correct: 2,
+                    explanation: "The 'tar' command is commonly used to archive and compress files in Linux, often combined with gzip compression."
+                },
+                {
+                    question: "Which command shows network connections?",
+                    options: ["network", "netstat", "connections", "net"],
+                    correct: 1,
+                    explanation: "The 'netstat' command displays network connections, routing tables, and network interface statistics."
+                },
+                {
+                    question: "What does the 'mount' command do?",
+                    options: ["Install software", "Attach filesystems", "Start services", "Create directories"],
+                    correct: 1,
+                    explanation: "The 'mount' command attaches filesystems to the directory tree, making storage devices accessible through the file system."
+                },
+                {
+                    question: "Which file contains system startup scripts?",
+                    options: ["/etc/init", "/etc/startup", "/etc/rc.d", "/etc/boot"],
+                    correct: 2,
+                    explanation: "The /etc/rc.d directory (or similar locations) contains system startup and shutdown scripts that run at different runlevels."
+                },
+                {
+                    question: "What command is used to kill processes?",
+                    options: ["stop", "kill", "end", "terminate"],
+                    correct: 1,
+                    explanation: "The 'kill' command terminates processes by sending signals, with various signal types for different termination methods."
+                },
+                {
+                    question: "What does the 'df' command show?",
+                    options: ["Data files", "Disk space usage", "Directory files", "Default files"],
+                    correct: 1,
+                    explanation: "The 'df' command displays disk space usage for mounted filesystems, showing available and used space."
+                },
+                {
+                    question: "Which command is used to create directories?",
+                    options: ["create", "mkdir", "newdir", "makedir"],
+                    correct: 1,
+                    explanation: "The 'mkdir' command creates new directories, with options to create parent directories if they don't exist."
+                },
+                {
+                    question: "What is the purpose of the /proc directory?",
+                    options: ["Process files", "Virtual filesystem with system info", "Program files", "Procedure files"],
+                    correct: 1,
+                    explanation: "The /proc directory is a virtual filesystem that provides information about running processes and system parameters."
+                },
+                {
+                    question: "What command shows system uptime?",
+                    options: ["time", "uptime", "runtime", "systime"],
+                    correct: 1,
+                    explanation: "The 'uptime' command shows how long the system has been running, along with load averages and user count."
+                },
+                {
+                    question: "Which command is used to search for files?",
+                    options: ["search", "find", "locate", "seek"],
+                    correct: 1,
+                    explanation: "The 'find' command searches for files and directories based on various criteria like name, size, permissions, and modification time."
+                },
+                {
+                    question: "What does the 'history' command show?",
+                    options: ["System history", "Command history", "File history", "User history"],
+                    correct: 1,
+                    explanation: "The 'history' command displays the command history for the current user session, showing previously executed commands."
+                },
+                {
+                    question: "Which file controls system services in systemd?",
+                    options: ["service files", "unit files", "daemon files", "system files"],
+                    correct: 1,
+                    explanation: "Unit files control system services in systemd, defining how services start, stop, and interact with the system."
+                },
+                {
+                    question: "What command is used to view file contents?",
+                    options: ["view", "cat", "show", "display"],
+                    correct: 1,
+                    explanation: "The 'cat' command displays the contents of files, commonly used for viewing text files and concatenating multiple files."
+                },
+                {
+                    question: "What does the 'uname' command show?",
+                    options: ["User name", "System information", "Unique name", "Unix name"],
+                    correct: 1,
+                    explanation: "The 'uname' command displays system information including kernel name, version, machine architecture, and operating system."
+                }
+            ]
+        };
+
+        // Game state
+        let currentQuestion = null;
+        let score = 0;
+        let totalQuestions = 0;
+        let selectedAnswer = null;
+        let assessmentCategories = [];
+        let assessmentQuestions = [];
+        let currentAssessmentIndex = 0;
+        let assessmentAnswers = [];
+        let selectedQuizCategory = 'all';
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Quiz category selection
+        function selectQuizCategory(category) {
+            selectedQuizCategory = category;
+            document.querySelectorAll('#random-quiz .category-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('cat-' + category).classList.add('selected');
+        }
+
+        // Random Quiz Functions
+        function getRandomQuestion() {
+            if (selectedQuizCategory === 'all') {
+                const allQuestions = [];
+                Object.values(quizData).forEach(categoryQuestions => {
+                    allQuestions.push(...categoryQuestions);
+                });
+                return allQuestions[Math.floor(Math.random() * allQuestions.length)];
+            } else {
+                const categoryQuestions = quizData[selectedQuizCategory];
+                return categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)];
+            }
+        }
+
+        function newQuestion() {
+            currentQuestion = getRandomQuestion();
+            selectedAnswer = null;
+            
+            document.getElementById('question').textContent = currentQuestion.question;
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('submit-btn').disabled = true;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            document.querySelectorAll('#options .option').forEach((option, i) => {
+                option.classList.remove('selected');
+                if (i === index) {
+                    option.classList.add('selected');
+                }
+            });
+            document.getElementById('submit-btn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedAnswer === null) return;
+            
+            totalQuestions++;
+            const isCorrect = selectedAnswer === currentQuestion.correct;
+            if (isCorrect) score++;
+            
+            // Update score display
+            document.getElementById('score').textContent = score;
+            document.getElementById('total').textContent = totalQuestions;
+            
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <h3>${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</h3>
+                <p><strong>Explanation:</strong> ${currentQuestion.explanation}</p>
+            `;
+            feedback.style.display = 'block';
+            
+            // Highlight correct/incorrect answers
+            document.querySelectorAll('#options .option').forEach((option, index) => {
+                if (index === currentQuestion.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            document.getElementById('submit-btn').disabled = true;
+        }
+
+        // Assessment Functions
+        function toggleCategory(category) {
+            const card = event.target.closest('.category-card');
+            if (assessmentCategories.includes(category)) {
+                assessmentCategories = assessmentCategories.filter(c => c !== category);
+                card.classList.remove('selected');
+            } else {
+                assessmentCategories.push(category);
+                card.classList.add('selected');
+            }
+        }
+
+        function startAssessment() {
+            if (assessmentCategories.length === 0) {
+                // Create custom modal instead of alert
+                showCustomAlert('Please select at least one category for assessment.');
+                return;
+            }
+            
+            // Prepare assessment questions (30 per category)
+            assessmentQuestions = [];
+            assessmentCategories.forEach(category => {
+                const categoryQuestions = [...quizData[category]];
+                // Shuffle and take up to 30 questions per category
+                const shuffled = categoryQuestions.sort(() => Math.random() - 0.5);
+                assessmentQuestions.push(...shuffled.slice(0, 30));
+            });
+            
+            // Shuffle all questions
+            assessmentQuestions = assessmentQuestions.sort(() => Math.random() - 0.5);
+            
+            currentAssessmentIndex = 0;
+            assessmentAnswers = [];
+            
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('assessment-quiz').style.display = 'block';
+            
+            showAssessmentQuestion();
+        }
+
+        function showAssessmentQuestion() {
+            const question = assessmentQuestions[currentAssessmentIndex];
+            
+            document.getElementById('assessment-question').textContent = question.question;
+            document.getElementById('assessment-submit').disabled = true;
+            
+            const optionsContainer = document.getElementById('assessment-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAssessmentAnswer(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update progress
+            const progress = ((currentAssessmentIndex + 1) / assessmentQuestions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function selectAssessmentAnswer(index) {
+            selectedAnswer = index;
+            document.querySelectorAll('#assessment-options .option').forEach((option, i) => {
+                option.classList.remove('selected');
+                if (i === index) {
+                    option.classList.add('selected');
+                }
+            });
+            document.getElementById('assessment-submit').disabled = false;
+        }
+
+        function submitAssessmentAnswer() {
+            if (selectedAnswer === null) return;
+            
+            const question = assessmentQuestions[currentAssessmentIndex];
+            assessmentAnswers.push({
+                question: question,
+                userAnswer: selectedAnswer,
+                correct: selectedAnswer === question.correct,
+                category: getCategoryForQuestion(question)
+            });
+            
+            currentAssessmentIndex++;
+            
+            if (currentAssessmentIndex < assessmentQuestions.length) {
+                showAssessmentQuestion();
+            } else {
+                showAssessmentResults();
+            }
+        }
+
+        function getCategoryForQuestion(question) {
+            for (const [category, questions] of Object.entries(quizData)) {
+                if (questions.includes(question)) {
+                    return category;
+                }
+            }
+            return 'unknown';
+        }
+
+        function showAssessmentResults() {
+            document.getElementById('assessment-quiz').style.display = 'none';
+            
+            const correctAnswers = assessmentAnswers.filter(a => a.correct).length;
+            const totalQuestions = assessmentAnswers.length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            // Generate recommendations
+            const categoryScores = {};
+            assessmentCategories.forEach(cat => {
+                const catQuestions = assessmentAnswers.filter(a => a.category === cat);
+                const catCorrect = catQuestions.filter(q => q.correct).length;
+                categoryScores[cat] = catQuestions.length > 0 ? (catCorrect / catQuestions.length) * 100 : 0;
+            });
+            
+            const recommendations = generateRecommendations(categoryScores);
+            
+            const resultsContainer = document.getElementById('assessment-results');
+            resultsContainer.innerHTML = `
+                <div class="results">
+                    <h2>Assessment Complete!</h2>
+                    <div class="score-circle">${percentage}%</div>
+                    <p>You scored ${correctAnswers} out of ${totalQuestions} questions correctly.</p>
+                    
+                    <div class="recommendations">
+                        <h3>📚 Personalized Learning Recommendations</h3>
+                        ${recommendations}
+                    </div>
+                    
+                    <button class="btn" onclick="restartAssessment()">Take Another Assessment</button>
+                </div>
+            `;
+            resultsContainer.style.display = 'block';
+        }
+
+        function generateRecommendations(scores) {
+            let recommendations = '<ul>';
+            
+            Object.entries(scores).forEach(([category, score]) => {
+                if (score < 70) {
+                    switch(category) {
+                        case 'cybersecurity':
+                            recommendations += '<li><strong>Cybersecurity:</strong> Focus on threat identification, phishing awareness, and security best practices. Consider studying CISSP or Security+ materials.</li>';
+                            break;
+                        case 'networking':
+                            recommendations += '<li><strong>Networking:</strong> Review network protocols, VPN concepts, and network security fundamentals. Study materials like Network+ or CCNA Security.</li>';
+                            break;
+                        case 'hardware':
+                            recommendations += '<li><strong>Hardware Security:</strong> Learn about physical security measures, TPM, HSMs, and secure boot processes. Explore hardware security courses.</li>';
+                            break;
+                        case 'software':
+                            recommendations += '<li><strong>Software Security:</strong> Study secure coding practices, vulnerability assessment, and patch management. Consider OWASP guidelines and secure development training.</li>';
+                            break;
+                        case 'linux':
+                            recommendations += '<li><strong>Linux:</strong> Practice command-line operations, system administration, and Linux security hardening. Consider Linux+ certification or hands-on labs.</li>';
+                            break;
+                    }
+                }
+            });
+            
+            if (recommendations === '<ul>') {
+                recommendations = '<p>🎉 Excellent work! You have strong knowledge across all areas. Consider advanced certifications like CISSP, CISM, or specialized security training.</p>';
+            } else {
+                recommendations += '</ul>';
+            }
+            
+            return recommendations;
+        }
+
+        function restartAssessment() {
+            assessmentCategories = [];
+            document.querySelectorAll('#assessment .category-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            document.getElementById('assessment-results').style.display = 'none';
+            document.getElementById('category-selection').style.display = 'block';
+        }
+
+        function showCustomAlert(message) {
+            // Create custom alert modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            const alertBox = document.createElement('div');
+            alertBox.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                margin: 20px;
+            `;
+            
+            alertBox.innerHTML = `
+                <p style="margin-bottom: 20px; font-size: 1.1em;">${message}</p>
+                <button class="btn" onclick="this.closest('div').remove()">OK</button>
+            `;
+            
+            modal.appendChild(alertBox);
+            document.body.appendChild(modal);
+        }
+
+        // Initialize the app
+        newQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99533858918eacb9',t:'MTc2MTU3ODg3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
